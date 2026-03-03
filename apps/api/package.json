@@ -24,6 +24,7 @@
     "@orpc/server": "^1.13.5",
     "@repo/auth": "workspace:*",
     "@repo/contract": "workspace:*",
+    "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "dotenv": "catalog:",
     "hono": "^4.11.9"

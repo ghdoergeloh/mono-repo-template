@@ -1,2 +1,2 @@
-export { sendEmail } from "./transport.js";
-export { sendVerificationEmail } from "./emails.js";
+export { sendEmail } from "./transport";
+export { sendVerificationEmail } from "./emails";

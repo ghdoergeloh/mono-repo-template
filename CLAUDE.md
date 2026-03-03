@@ -79,7 +79,7 @@ When adding a new API endpoint:
 
 - Node.js ^24.13.0, pnpm ^10.28.2
 - `.env` at repo root (copy from `.env.example`): `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `API_PORT`, `VITE_API_URL`
-- Docker Compose provides PostgreSQL 16 (port 5432) and Mailpit (SMTP 1025, web UI 8025)
+- Docker Compose provides PostgreSQL and Mailpit
 
 ## Post-Change Quality Checks
 

@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-import db from "@repo/db/client";
+import { db } from "@repo/db/client";
 import * as schema from "@repo/db/schema";
 import { sendVerificationEmail } from "@repo/transactional";
 
