@@ -44,7 +44,6 @@ export const baseConfig = defineConfig(
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
     extends: [
       eslint.configs.recommended,
-      // @ts-expect-error - turbo.configs is not typed correctly
       turbo.configs["flat/recommended"],
       importPlugin.flatConfigs.recommended,
       importPlugin.flatConfigs.typescript,
@@ -53,6 +52,7 @@ export const baseConfig = defineConfig(
       ...tseslint.configs.stylisticTypeChecked,
     ],
     rules: {
+      "@typescript-eslint/no-deprecated": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
