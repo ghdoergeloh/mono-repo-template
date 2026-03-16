@@ -4,29 +4,29 @@ packages:
   - tooling/*
 
 catalog:
-  "@better-auth/cli": ^1.4.18
+  "@better-auth/cli": ^1.4.21
   "@better-auth/expo": ^1.4.18
-  "@tailwindcss/postcss": ^4.1.18
-  "@tailwindcss/vite": ^4.1.18
+  "@tailwindcss/postcss": ^4.2.1
+  "@tailwindcss/vite": ^4.2.1
   "@tanstack/react-form": ^1.23.8
   "@tanstack/react-query": ^5.90.8
   "@trpc/client": ^11.7.1
   "@trpc/server": ^11.7.1
   "@trpc/tanstack-react-query": ^11.7.1
-  "@types/node": ^24.10.13
+  "@types/node": ^24.12.0
   "@vitejs/plugin-react": ^5.1.4
   dotenv: ^17.3.1
   drizzle-kit: ^0.31.9
   drizzle-orm: ^0.45.1
   drizzle-zod: ^0.8.3
   eslint: ^9.39.2
-  postcss: ^8.5.6
+  postcss: ^8.5.8
   prettier: ^3.8.1
-  tailwindcss: ^4.1.18
+  tailwindcss: ^4.2.1
   tsx: ^4.21.0
   typescript: ^5.9.3
   vite: ^7.3.1
-  vitest: ^4.0.18
+  vitest: ^4.1.0
   zod: ^4.3.6
 
 catalogs:
