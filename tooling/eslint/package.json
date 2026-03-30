@@ -13,18 +13,18 @@
   },
   "prettier": "@repo/prettier-config",
   "dependencies": {
-    "@eslint/compat": "^2.0.2",
+    "@eslint/compat": "^2.0.3",
     "@eslint/js": "^9.39.2",
-    "@next/eslint-plugin-next": "^16.1.6",
+    "@next/eslint-plugin-next": "^16.2.1",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.5.0",
-    "eslint-plugin-turbo": "^2.8.9",
-    "globals": "^17.3.0",
-    "typescript-eslint": "^8.55.0"
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-turbo": "^2.9.0",
+    "globals": "^17.4.0",
+    "typescript-eslint": "^8.58.0"
   },
   "devDependencies": {
     "@repo/prettier-config": "workspace:*",
