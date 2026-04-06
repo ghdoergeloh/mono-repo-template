@@ -27,7 +27,7 @@
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "dotenv": "catalog:",
-    "hono": "^4.12.10"
+    "hono": "^4.12.11"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
