@@ -20,8 +20,8 @@
   },
   "prettier": "@repo/prettier-config",
   "dependencies": {
-    "@react-email/components": "^1.0.11",
-    "nodemailer": "^8.0.4",
+    "@react-email/components": "^1.0.12",
+    "nodemailer": "^8.0.7",
     "react": "catalog:react19"
   },
   "devDependencies": {
