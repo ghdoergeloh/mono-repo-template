@@ -31,26 +31,6 @@
     },
     "//#clean": {
       "cache": false
-    },
-    "push": {
-      "cache": false,
-      "interactive": true
-    },
-    "generate": {
-      "cache": false,
-      "interactive": true
-    },
-    "migrate": {
-      "cache": false,
-      "interactive": true
-    },
-    "studio": {
-      "cache": false,
-      "persistent": true
-    },
-    "ui-add": {
-      "cache": false,
-      "interactive": true
     }
   },
   "globalEnv": [
