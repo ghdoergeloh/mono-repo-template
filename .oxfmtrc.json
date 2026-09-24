@@ -20,6 +20,11 @@
         "elementNamePattern": ["react", "react/**"]
       },
       {
+        "groupName": "alias-type",
+        "elementNamePattern": ["~/**"],
+        "modifiers": ["type"]
+      },
+      {
         "groupName": "alias",
         "elementNamePattern": ["~/**"]
       }
@@ -38,6 +43,7 @@
       {
         "newlinesBetween": true
       },
+      "alias-type",
       "alias",
       ["type-parent", "type-sibling", "type-index"],
       ["value-parent", "value-sibling", "value-index"],
