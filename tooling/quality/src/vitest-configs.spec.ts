@@ -60,12 +60,16 @@ const configFiles = globSync("{apps,packages,tooling}/*/vitest.config.ts", {
   cwd: root,
 }).sort();
 
-/** Configs of packages that measure coverage (`test:unit:coverage`). */
+/**
+ * Configs of packages that measure coverage: their `test:unit:coverage`
+ * runs vitest with `--coverage`. Checks and test helpers only run their
+ * tests there.
+ */
 const coverageConfigs = configFiles.filter((file) => {
   const pkg = JSON.parse(
     readFileSync(path.join(root, path.dirname(file), "package.json"), "utf8"),
   ) as { scripts?: Record<string, string> };
-  return pkg.scripts?.["test:unit:coverage"] !== undefined;
+  return pkg.scripts?.["test:unit:coverage"]?.includes("--coverage") ?? false;
 });
 
 async function load(file: string): Promise<TestOptions | undefined> {

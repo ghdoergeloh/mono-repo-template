@@ -6,6 +6,7 @@
     "clean": "git clean -xdf .cache .turbo node_modules playwright-report test-results",
     "test:e2e": "playwright test",
     "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

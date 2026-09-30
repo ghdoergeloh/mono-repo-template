@@ -92,6 +92,10 @@ describe.each(packageDirs)("%s", (dir) => {
     );
   });
 
+  it("runs its tests in CI, which runs test:unit:coverage", () => {
+    expect(Object.keys(scripts)).toContain("test:unit:coverage");
+  });
+
   it("has a vitest config, so the network guard applies", () => {
     expect(existsSync(path.join(root, dir, "vitest.config.ts"))).toBe(true);
   });
