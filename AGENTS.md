@@ -20,7 +20,7 @@ Instructions for coding agents in this repository. Only rules that cannot be rea
 - Database tests use `createTestDatabase()` from `@repo/db/testing` (in-memory PGlite, migrated, one copy per test). Locks, parallel transactions and other concurrency need `createPostgresTestDatabase()`; those tests are skipped without `TEST_DATABASE_URL` and run in CI.
 - Coverage floors in each `vitest.config.ts` are fixed numbers. Raise them by hand when the coverage grows; never lower them to make a change pass.
 - Every bug fix and every review finding gets a test that fails without the fix.
-- Screenshot references (`__screenshots__`) come from Chromium on Linux. Update them only for an intended visual change, and look at every new image before you commit it.
+- Screenshot references (`__screenshots__`) come from Chromium on Linux arm64 (CI runner `ubuntu-24.04-arm`, dev container on Apple silicon); other systems skip the comparison. Update them only for an intended visual change, and look at every new image before you commit it.
 
 ## Styling
 

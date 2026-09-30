@@ -32,6 +32,9 @@ export function createDatabase(
   const pool = new pg.Pool({
     connectionString: url,
     max: options.maxConnections ?? 10,
+    // Without a limit, a request or /ready waits until the operating system
+    // gives up on an unreachable database.
+    connectionTimeoutMillis: 5000,
   });
   const db = drizzle({ client: pool, schema });
   return {

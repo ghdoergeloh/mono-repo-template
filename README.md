@@ -44,10 +44,14 @@ first real feature exists:
 
 - `packages/core/src/services/greeting.service.ts` and its test
 - `user.hello` in `packages/contract/src/index.ts`,
-  `packages/core/src/handlers/user.ts` and `apps/api/src/router.ts`
-- the `hello` command in `apps/cli/src/program.ts`
-- the greeting on `apps/react/src/routes/index.tsx`, and
-  `apps/react/src/routes/about.tsx`
+  `packages/core/src/handlers/user.ts` and `apps/api/src/router.ts`, and
+  its tests in `handlers/user.spec.ts` and `apps/api/src/router.spec.ts`
+- the `hello` command in `apps/cli/src/program.ts` and its test
+- the greeting on `apps/react/src/routes/index.tsx`,
+  `apps/react/src/routes/about.tsx`, and in `apps/e2e`: the greeting
+  checks in `tests/auth.e2e.ts`, the `about` entry in
+  `tests/screens.e2e.ts` and the home and about screenshots
+  (`pnpm test:e2e --update-snapshots`)
 
 Sign-up, sign-in and `user.me` are not an example; keep them.
 
@@ -212,8 +216,10 @@ names what is wrong.
   server; they run when `TEST_DATABASE_URL` is set, as in CI.
 - **Coverage floors** are fixed numbers a little below the measured
   values. Raise them by hand; they do not rewrite themselves.
-- **Screenshots** of stories and screens are compared on Linux, where the
-  references come from (CI and the dev container). After an intended
+- **Screenshots** of stories and screens are compared on Linux arm64,
+  where the references come from: the CI runner `ubuntu-24.04-arm` and
+  the dev container on Apple silicon. Other systems run every other check
+  and skip only the pixel comparison. After an intended
   change: `pnpm -F @repo/ui exec vitest run --project stories --update`
   or `pnpm test:e2e --update-snapshots`, then look at every new image.
 - Story tests need Chromium: `pnpm -F @repo/ui exec playwright install chromium`.

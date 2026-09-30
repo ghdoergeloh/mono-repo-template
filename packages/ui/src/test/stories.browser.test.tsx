@@ -88,7 +88,7 @@ function storiesOf(module: StoryModule) {
  * Renders every story in light and dark with the real CSS and runs its play
  * function. Then axe checks roles, names, labels and contrast as rendered,
  * and the screenshot is compared with the reference image in
- * `__screenshots__` (on Linux only, where the references come from).
+ * `__screenshots__` (on Linux arm64 only, where the references come from).
  * After an intended change, update the references with
  * `pnpm -F @repo/ui exec vitest run --project stories --update` and look
  * at every new image before you commit it.

@@ -1,13 +1,12 @@
-import { globSync, readFileSync } from "node:fs";
+import { existsSync, globSync, readFileSync } from "node:fs";
 import path from "node:path";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 /**
- * Checks that hold for every package of the workspace. Each of them once
- * failed silently: a typecheck that checked no file, a package without
- * tests that stayed green, a test config without the network guard,
- * coverage floors that rewrote themselves on every run.
+ * Checks that hold for every package of the workspace. Each one guards a
+ * gap that stays silent otherwise: a typecheck that checks no file, a
+ * package without tests that stays green, tests without the network guard.
  */
 
 const root = path.resolve(import.meta.dirname, "../../..");
@@ -91,6 +90,10 @@ describe.each(packageDirs)("%s", (dir) => {
     expect(Object.keys(scripts)).toEqual(
       expect.arrayContaining(["typecheck", "test:unit"]),
     );
+  });
+
+  it("has a vitest config, so the network guard applies", () => {
+    expect(existsSync(path.join(root, dir, "vitest.config.ts"))).toBe(true);
   });
 
   it("fails when it has no tests", () => {

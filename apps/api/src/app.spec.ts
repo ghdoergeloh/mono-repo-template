@@ -10,6 +10,8 @@ const spaDir = mkdtempSync(join(tmpdir(), "spa-"));
 mkdirSync(join(spaDir, "assets"));
 writeFileSync(join(spaDir, "index.html"), "<html><body>SPA</body></html>");
 writeFileSync(join(spaDir, "assets", "app-1a2b3c.js"), "console.log(1)");
+writeFileSync(join(spaDir, ".env"), "SECRET=1");
+writeFileSync(join(spaDir, "assets", ".secret"), "1");
 
 afterAll(() => {
   rmSync(spaDir, { recursive: true, force: true });
@@ -85,10 +87,33 @@ describe("SPA", () => {
     expect(response.headers.get("cache-control")).toBe("no-cache");
   });
 
+  it.each(["/", "/index.html"])(
+    "revalidates %s on every load",
+    async (path) => {
+      const response = await app({ spaDir }).request(path);
+      expect(await response.text()).toContain("SPA");
+      expect(response.headers.get("cache-control")).toBe("no-cache");
+    },
+  );
+
   it("serves hashed assets with a long cache time", async () => {
     const response = await app({ spaDir }).request("/assets/app-1a2b3c.js");
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toContain("immutable");
+  });
+
+  it.each(["/assets/app-old999.js", "/favicon.ico"])(
+    "answers 404 for the missing file %s, never HTML",
+    async (path) => {
+      const response = await app({ spaDir }).request(path);
+      expect(response.status).toBe(404);
+      expect(response.headers.get("cache-control")).toBeNull();
+    },
+  );
+
+  it("serves no dotfiles", async () => {
+    expect((await app({ spaDir }).request("/.env")).status).toBe(404);
+    expect((await app({ spaDir }).request("/assets/.secret")).status).toBe(404);
   });
 
   it("is off when Vite serves the SPA", async () => {

@@ -20,7 +20,7 @@ export default defineConfig({
     // Any changed pixel fails the comparison.
     toHaveScreenshot: { maxDiffPixels: 0, animations: "disabled" },
   },
-  // One reference per screenshot; the platform is Linux (see visual.e2e.ts).
+  // One reference per screenshot; they come from Linux (see screens.e2e.ts).
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   reporter: process.env["CI"]
     ? [["list"], ["html", { open: "never" }]]

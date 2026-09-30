@@ -15,10 +15,7 @@ export async function expectAccessible(page: Page, screen: string) {
       .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime))
       .map((a) => a.finished.catch(() => undefined)),
   )`);
-  const results = await new AxeBuilder({ page })
-    // The router devtools of the Vite dev server are not part of the app.
-    .exclude(".TanStackRouterDevtools")
-    .analyze();
+  const results = await new AxeBuilder({ page }).analyze();
   const violations = results.violations.map((v) => {
     const nodes = v.nodes.map(
       (n) => `${n.target.join(" ")}: ${n.failureSummary ?? n.html}`,

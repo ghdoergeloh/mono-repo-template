@@ -16,7 +16,15 @@ const origins = z
       .map((origin) => origin.trim())
       .filter(Boolean),
   )
-  .pipe(z.array(z.url()));
+  .pipe(z.array(z.url({ protocol: /^https?$/ })))
+  // CORS compares origins; a trailing slash or a path would never match.
+  .transform((urls) => urls.map((url) => new URL(url).origin));
+
+/** The secret of `.env.example`; it must never reach production. */
+const EXAMPLE_SECRET = "your-secret-key-here-min-32-chars";
+
+const isLoopback = (url: string) =>
+  ["localhost", "127.0.0.1", "[::1]"].includes(new URL(url).hostname);
 
 const Raw = z.object({
   NODE_ENV: z
@@ -41,7 +49,6 @@ const Raw = z.object({
 
 /** The validated configuration of the API process. */
 export interface Env {
-  production: boolean;
   port: number;
   databaseUrl: string;
   auth: {
@@ -70,12 +77,23 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     throw new Error(`Invalid environment:\n${problems.join("\n")}`);
   }
   const raw = parsed.data;
+  const problems: string[] = [];
   if (raw.SMTP_HOST && !raw.SMTP_FROM)
+    problems.push("SMTP_FROM: required when SMTP_HOST is set");
+  if (raw.NODE_ENV === "production") {
+    if (raw.BETTER_AUTH_SECRET === EXAMPLE_SECRET)
+      problems.push("BETTER_AUTH_SECRET: still the value of .env.example");
+    if (
+      new URL(raw.BETTER_AUTH_URL).protocol !== "https:" &&
+      !isLoopback(raw.BETTER_AUTH_URL)
+    )
+      problems.push("BETTER_AUTH_URL: must use https in production");
+  }
+  if (problems.length > 0)
     throw new Error(
-      "Invalid environment:\n  SMTP_FROM: required when SMTP_HOST is set",
+      `Invalid environment:\n${problems.map((p) => `  ${p}`).join("\n")}`,
     );
   return {
-    production: raw.NODE_ENV === "production",
     port: raw.API_PORT,
     databaseUrl: raw.DATABASE_URL,
     auth: { secret: raw.BETTER_AUTH_SECRET, url: raw.BETTER_AUTH_URL },

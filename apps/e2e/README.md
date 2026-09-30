@@ -33,7 +33,8 @@ in light and dark. For each it checks:
 - axe finds no accessibility problem,
 - the screenshot equals the reference in `tests/__screenshots__`.
 
-The references come from Chromium on Linux (CI and the dev container).
+The references come from Chromium on Linux arm64 (the CI runner, and the
+dev container on Apple silicon).
 Other systems skip the comparison. Look at every new or changed image
 before you commit it. Data on the screens must be the same on every run:
 use fixed names and addresses, not the time or random values.

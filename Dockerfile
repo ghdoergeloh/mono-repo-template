@@ -70,6 +70,6 @@ COPY --from=builder --chown=root:root /repo/apps/cli/dist ./apps/cli/dist
 USER node
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s \
-    CMD ["node", "-e", "fetch('http://127.0.0.1:3000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+    CMD ["node", "-e", "fetch(`http://127.0.0.1:${process.env.API_PORT}/health`).then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["node", "--enable-source-maps", "apps/api/dist/index.js"]

@@ -55,18 +55,36 @@ export function createApp(deps: AppDeps): Hono {
 
   if (deps.spaDir) {
     const root = deps.spaDir;
-    app.use("/assets/*", async (c, next) => {
+    // No dotfiles, even if the build puts one into the SPA directory.
+    app.use("*", async (c, next) => {
+      if (c.req.path.split("/").some((segment) => segment.startsWith(".")))
+        return c.notFound();
       await next();
-      // Vite puts a content hash into every file name under /assets.
-      if (c.res.ok)
-        c.res.headers.set(
-          "Cache-Control",
-          "public, max-age=31536000, immutable",
-        );
     });
-    app.use("*", serveStatic({ root }));
-    // Client-side routes get index.html.
+    app.use(
+      "*",
+      serveStatic({
+        root,
+        onFound: (path, c) => {
+          // Vite puts a content hash into every file name under /assets.
+          // index.html is revalidated on every load, so a deploy is seen
+          // at once. The response exists already when this runs.
+          c.res.headers.set(
+            "Cache-Control",
+            path.includes("/assets/") && !path.endsWith(".html")
+              ? "public, max-age=31536000, immutable"
+              : "no-cache",
+          );
+        },
+      }),
+    );
+    // Client-side routes get index.html. A missing file (a path with an
+    // extension, such as an old asset after a deploy) gets 404 instead,
+    // so no cache keeps HTML as a script.
     app.get("*", async (c) => {
+      const last = c.req.path.split("/").pop() ?? "";
+      if (c.req.path.startsWith("/assets/") || last.includes("."))
+        return c.notFound();
       const html = await readFile(join(root, "index.html"), "utf8");
       c.header("Cache-Control", "no-cache");
       return c.html(html);

@@ -49,7 +49,8 @@ const RootLayout = () => {
         </div>
       </header>
       <Outlet />
-      <TanStackRouterDevtools />
+      {/* Not in automated browsers: the devtools are no part of the app. */}
+      {!navigator.webdriver && <TanStackRouterDevtools />}
     </>
   );
 };

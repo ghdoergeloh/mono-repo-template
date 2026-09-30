@@ -18,7 +18,7 @@
     "knip": "knip",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "lint:ws": "pnpm dlx sherif@latest",
+    "lint:ws": "sherif",
     "postinstall": "pnpm lint:ws",
     "prepare": "husky",
     "preview:emails": "pnpm -F @repo/transactional preview",
@@ -43,6 +43,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
+    "sherif": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

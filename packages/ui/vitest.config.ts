@@ -49,10 +49,13 @@ export default defineConfig({
         test: {
           name: "stories",
           include: ["src/**/*.browser.test.tsx"],
-          // The reference images come from Chromium on Linux (CI, dev
-          // container). Other systems render text a little differently, so
-          // they skip the comparison.
-          provide: { screenshots: process.platform === "linux" },
+          // The reference images come from Chromium on Linux arm64 (the CI
+          // runner, the dev container on Apple silicon). Other systems render
+          // a little differently, so they skip the comparison.
+          provide: {
+            screenshots:
+              process.platform === "linux" && process.arch === "arm64",
+          },
           // No network guard: it patches node:net, which does not exist in
           // the browser. Stories load no data.
           setupFiles: ["./src/test/stories.setup.ts"],
@@ -64,6 +67,8 @@ export default defineConfig({
             provider: playwright() as unknown as BrowserProviderOption,
             instances: [{ browser: "chromium" }],
             viewport: { width: 800, height: 600 },
+            // Many parallel tasks can slow down the start of the browser.
+            connectTimeout: 180_000,
           },
         },
       },

@@ -49,9 +49,11 @@ describe("authorization of every procedure", () => {
   );
 
   it.each(procedures.filter((p) => isPublic(p.name)).map((p) => [p.name, p]))(
-    "%s answers without a session",
+    "%s lets a caller without a session in",
     async (_name, procedure) => {
-      expect((await call(procedure.path, null))?.status).toBe(200);
+      // Without input and database the answer may be 400 or 500; only a
+      // 401 would mean the procedure is not public.
+      expect((await call(procedure.path, null))?.status).not.toBe(401);
     },
   );
 });

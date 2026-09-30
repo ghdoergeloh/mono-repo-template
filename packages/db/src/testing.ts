@@ -78,16 +78,19 @@ export async function createPostgresTestDatabase(
   pool.on("error", (error) => {
     if (!closing) throw error;
   });
-  const db = drizzlePg({ client: pool, schema });
-  await migratePg(db, { migrationsFolder: migrationsFolder() });
-  return {
-    db,
-    pool,
-    close: async () => {
-      closing = true;
-      await pool.end();
-      await admin.query(`drop database if exists ${name} with (force)`);
-      await admin.end();
-    },
+  const close = async () => {
+    closing = true;
+    await pool.end();
+    await admin.query(`drop database if exists ${name} with (force)`);
+    await admin.end();
   };
+  const db = drizzlePg({ client: pool, schema });
+  try {
+    await migratePg(db, { migrationsFolder: migrationsFolder() });
+  } catch (error) {
+    // A failed migration must not leave the database behind.
+    await close();
+    throw error;
+  }
+  return { db, pool, close };
 }

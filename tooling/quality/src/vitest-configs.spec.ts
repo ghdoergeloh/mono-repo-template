@@ -94,8 +94,6 @@ describe("vitest configs", () => {
     const thresholds = (await load(file))?.coverage?.thresholds ?? {};
     expect(thresholds).not.toHaveProperty("autoUpdate");
     for (const metric of ["statements", "branches", "functions", "lines"])
-      expect(thresholds[metric], `${file}: ${metric}`).toEqual(
-        expect.any(Number),
-      );
+      expect(thresholds[metric], `${file}: ${metric}`).toBeGreaterThan(0);
   });
 });
