@@ -101,16 +101,16 @@ Every renderer's entry CSS file (e.g. `src/index.css`, `src/renderer/src/styles/
 ```css
 @import "tailwindcss";
 @import "@repo/tailwind-config/theme";
-@source "../<relative path>/node_modules/@repo/ui/src";
+@source "../<relative path>/packages/ui/src";
 ```
 
-The `@source` directive is **mandatory** in Tailwind v4. Without it the bundler doesn't scan `@repo/ui`, and classes that appear only in shared components silently disappear from production. Adjust the relative path so it points at the symlink in the app's `node_modules`.
+The `@source` directive is **mandatory** in Tailwind v4. Without it the bundler doesn't scan `@repo/ui`, and classes that appear only in shared components silently disappear from production. Point it at the **real path** of `packages/ui/src`, not at the symlink in `node_modules`: Vite does not watch files under `node_modules`, so with the symlink path a new class in a component shows up only after a restart of the dev server.
 
 Reference implementation: `apps/react/src/index.css`. It also paints `body` with `bg-background text-foreground`.
 
 ### 4. Mount the theme on `<html>`
 
-The dark variant is class‑based: `@variant dark` triggers when `<html class="dark">` is set. Apps own the toggle.
+The dark variant is class‑based: `theme.css` declares `@custom-variant dark (&:where(.dark, .dark *))`, so `@variant dark` triggers when `<html class="dark">` is set. Without that line Tailwind v4 follows `prefers-color-scheme` and ignores the class. Apps own the toggle.
 
 Canonical wiring (see `apps/react/src/lib/theme.ts` and `apps/react/src/components/ThemeToggle.tsx`):
 
@@ -149,13 +149,17 @@ Skipping step 3 means the variable exists but `bg-<name>` doesn't compile to any
 
 Use OKLCH for new colours (matches the existing palette and gives perceptually uniform lightness). Pair every surface token with a matching `-foreground` so callers can write `bg-<x> text-<x>-foreground` without thinking.
 
+Then add every new combination of text and background to `packages/ui/src/test/color-pairs.ts`. `contrast.spec.ts` computes the contrast of each pair in both themes and fails below 4.5:1 for text and 3:1 for graphics. To fix a pair, change only the lightness (the first OKLCH value) of the token, in small steps.
+
 ## Adding shadcn components
 
 `pnpm -F @repo/ui ui-add` (calls `pnpm dlx shadcn@latest add`). `packages/ui/components.json` already points `tailwind.css` at `../../tooling/tailwind/theme.css`, so added components use the shared token system automatically. Don't pass `--baseColor`; it's a no‑op given how `components.json` is configured.
 
 ## Failure modes & fixes
 
-**"Tailwind class from `@repo/ui` doesn't apply"** — `@source` directive missing or path wrong in the app's entry CSS. Verify with `ls node_modules/@repo/ui` from the app's directory and adjust the relative path.
+**"Tailwind class from `@repo/ui` doesn't apply"** — `@source` directive missing or path wrong in the app's entry CSS. Verify that the relative path reaches `packages/ui/src` from the CSS file.
+
+**"A new class from `@repo/ui` appears only after restarting Vite"** — `@source` points through `node_modules`. Use the real path (see step 3).
 
 **"Dark mode doesn't switch"** — `<html>` doesn't have `class="dark"`. Either no toggle is wired up, or the toggle runs after first paint. Check `document.documentElement.classList`. If the boot block isn't there, components will style correctly _after_ the user toggles, but flash on every reload.
 
@@ -167,6 +171,11 @@ Use OKLCH for new colours (matches the existing palette and gives perceptually u
 
 **"Modal backdrop looks weird in dark mode"** — `bg-black/30` was used. Replace with `bg-foreground/30` (or a dedicated token if backdrops vary).
 
-## Lint guard (optional)
+## Guards
 
-To prevent regressions, a lint rule can flag `className` strings that contain `(gray|indigo|red|amber|green|blue|sky|slate|zinc)-[0-9]`. Not currently enabled in this repo. Oxlint has no `no-restricted-syntax`, so this needs a small JavaScript plugin, registered under `jsPlugins` in `.oxlintrc.json`.
+These tests keep the rules above; a new app adds its `src` to their lists:
+
+- `packages/ui/src/test/raw-colors.spec.ts` — no hex values, colour functions, palette or arbitrary colour classes in `packages/ui/src` and `apps/react/src` (`roots`).
+- `packages/ui/src/test/contrast.spec.ts` — the contrast of every token pair in `color-pairs.ts`, light and dark.
+- `packages/ui/src/test/stories.browser.test.tsx` — every story in light and dark with the real CSS: axe (contrast as rendered) and a screenshot.
+- `apps/react/src/test/ui-only.spec.ts` and `secondary-text.spec.ts` — screens use `@repo/ui` components only, and no running text in `text-muted-foreground`.
