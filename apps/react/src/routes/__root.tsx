@@ -17,7 +17,7 @@ const RootLayout = () => {
 
   return (
     <>
-      <header className="border-border flex items-center justify-between gap-2 border-b p-2">
+      <header className="border-border flex flex-wrap items-center justify-between gap-2 border-b p-2">
         <nav aria-label="Main" className="flex gap-2">
           <Link to="/" className="[&.active]:font-bold">
             Home
@@ -26,11 +26,13 @@ const RootLayout = () => {
             About
           </Link>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <ThemeToggle />
           {isPending ? null : session?.user ? (
             <>
-              <span className="text-sm">{session.user.email}</span>
+              <span className="hidden text-sm sm:inline">
+                {session.user.email}
+              </span>
               <Button
                 variant="secondary"
                 onPress={async () => {

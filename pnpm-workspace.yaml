@@ -16,6 +16,7 @@ allowBuilds:
   unrs-resolver: false
 
 catalog:
+  "@axe-core/playwright": ^4.13.0
   "@commitlint/cli": ^21.2.3
   "@commitlint/config-conventional": ^21.2.3
   "@electric-sql/pglite": ^0.5.8
@@ -26,6 +27,8 @@ catalog:
   "@orpc/contract": ^1.15.3
   "@orpc/server": ^1.15.3
   "@orpc/tanstack-query": ^1.15.3
+  # Exact: Playwright and the Vitest browser tests share one Chromium build.
+  "@playwright/test": 1.63.0
   # Exact versions: `email dev` requires @react-email/ui to match react-email.
   "@react-email/ui": 6.9.5
   "@storybook/addon-a11y": ^10.6.0

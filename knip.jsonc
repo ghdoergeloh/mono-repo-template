@@ -9,6 +9,11 @@
       // Referenced by name in postcss-config.js's `plugins` object, not imported.
       "ignoreDependencies": ["@tailwindcss/postcss"],
     },
+    "apps/e2e": {
+      // Started by the web server command in playwright.config.ts.
+      "entry": ["src/prepare-db.ts"],
+      "ignoreDependencies": ["tsx"],
+    },
     "packages/auth": {
       // Loaded by the better-auth CLI (`pnpm -F @repo/auth generate`).
       "entry": ["src/cli-config.ts"],

@@ -31,6 +31,15 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "test:e2e": {
+      "cache": false,
+      "env": [
+        "E2E_ADMIN_DATABASE_URL",
+        "E2E_DATABASE",
+        "E2E_WEB_PORT",
+        "E2E_API_PORT"
+      ]
     }
   },
   "globalEnv": [
