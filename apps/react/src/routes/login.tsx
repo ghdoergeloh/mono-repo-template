@@ -66,7 +66,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-bold">Sign In</h1>
         {error && (
@@ -114,6 +114,6 @@ function LoginPage() {
           Don&apos;t have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

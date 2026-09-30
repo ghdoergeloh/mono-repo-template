@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import type { PlopTypes } from "@turbo/gen";
 
 interface PackageJson {
@@ -46,23 +47,34 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: "add",
+        path: "packages/{{ name }}/vitest.config.ts",
+        templateFile: "templates/vitest.config.ts.hbs",
+      },
+      {
+        type: "add",
         path: "packages/{{ name }}/src/index.ts",
         template: "export const name = '{{ name }}';",
       },
       {
+        type: "add",
+        path: "packages/{{ name }}/src/index.spec.ts",
+        templateFile: "templates/index.spec.ts.hbs",
+      },
+      {
         type: "modify",
         path: "packages/{{ name }}/package.json",
-        async transform(content, answers) {
+        transform(content, answers) {
           if ("deps" in answers && typeof answers.deps === "string") {
             const pkg = JSON.parse(content) as PackageJson;
+            const catalog = readFileSync("pnpm-workspace.yaml", "utf8");
             for (const dep of answers.deps.split(" ").filter(Boolean)) {
-              const version = await fetch(
-                `https://registry.npmjs.org/-/package/${dep}/dist-tags`,
-              )
-                .then((res) => res.json())
-                .then((json) => json.latest);
+              // Versions live in the catalog, never in package.json.
+              if (!new RegExp(`^  "?${dep}"?:`, "m").test(catalog))
+                console.warn(
+                  `${dep} is not in the catalog of pnpm-workspace.yaml. Add it there before you run pnpm install.`,
+                );
               if (!pkg.dependencies) pkg.dependencies = {};
-              pkg.dependencies[dep] = `^${version}`;
+              pkg.dependencies[dep] = "catalog:";
             }
             return JSON.stringify(pkg, null, 2);
           }
@@ -77,7 +89,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           // execSync("pnpm dlx sherif@latest --fix", {
           //   stdio: "inherit",
           // });
-          execSync("pnpm i", { stdio: "inherit" });
+          execSync("pnpm install --no-frozen-lockfile", { stdio: "inherit" });
           execSync(`pnpm oxfmt packages/${answers.name}`);
           return "Package scaffolded";
         }

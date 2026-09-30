@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@repo/tailwind-config/theme";
+@source "./";
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}

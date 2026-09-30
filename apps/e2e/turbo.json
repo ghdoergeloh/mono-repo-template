@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // The helper tests measure no coverage, so there is no output to keep.
+    "test:unit:coverage": {
+      "outputs": []
+    }
+  }
+}

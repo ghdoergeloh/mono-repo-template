@@ -1,0 +1,25 @@
+{
+  "name": "@repo/e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules playwright-report test-results",
+    "test:e2e": "playwright test",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "@repo/db": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@repo/vitest": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "pg": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

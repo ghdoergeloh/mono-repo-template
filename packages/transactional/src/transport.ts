@@ -1,26 +1,42 @@
+import type { Transporter } from "nodemailer";
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: process.env["SMTP_HOST"] ?? "localhost",
-  port: Number(process.env["SMTP_PORT"]) || 1025,
-  secure: process.env["SMTP_SECURE"] === "true",
-  ...(process.env["SMTP_USER"] && {
-    auth: {
-      user: process.env["SMTP_USER"],
-      pass: process.env["SMTP_PASS"],
-    },
-  }),
-});
+/** SMTP settings of the mailer. */
+export interface SmtpConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  user?: string;
+  pass?: string;
+  /** Sender address, e.g. `noreply@example.com`. */
+  from: string;
+}
 
-export async function sendEmail(params: {
+/** One email to send. */
+export interface Email {
   to: string;
   subject: string;
   html: string;
-}) {
-  await transporter.sendMail({
-    from: process.env["SMTP_FROM"] ?? "noreply@localhost",
-    to: params.to,
-    subject: params.subject,
-    html: params.html,
-  });
+}
+
+/** Sends emails. Tests pass their own transporter (e.g. `jsonTransport`). */
+export interface Mailer {
+  send(email: Email): Promise<void>;
+}
+
+/** Creates a mailer for an SMTP server, or for the given transporter. */
+export function createMailer(
+  config: SmtpConfig,
+  transporter: Transporter = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    ...(config.user && { auth: { user: config.user, pass: config.pass } }),
+  }),
+): Mailer {
+  return {
+    send: async (email) => {
+      await transporter.sendMail({ from: config.from, ...email });
+    },
+  };
 }

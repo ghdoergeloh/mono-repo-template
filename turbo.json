@@ -15,15 +15,15 @@
       "persistent": false
     },
     "typecheck": {
-      "dependsOn": ["^topo", "^build"],
+      "dependsOn": ["^topo"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "test:unit": {
-      "dependsOn": ["^topo", "^build"],
+      "dependsOn": ["^topo"],
       "outputs": []
     },
     "test:unit:coverage": {
-      "dependsOn": ["^topo", "^build"],
+      "dependsOn": ["^topo"],
       "outputs": ["coverage/**"]
     },
     "clean": {
@@ -31,14 +31,27 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "test:e2e": {
+      "cache": false,
+      "env": [
+        "E2E_ADMIN_DATABASE_URL",
+        "E2E_DATABASE",
+        "E2E_WEB_PORT",
+        "E2E_API_PORT"
+      ]
     }
   },
   "globalEnv": [
     "DATABASE_URL",
+    "TEST_DATABASE_URL",
+    "MIGRATIONS_DIR",
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
+    "TRUSTED_ORIGINS",
     "API_PORT",
-    "VITE_API_URL",
+    "API_PROXY_TARGET",
+    "SPA_DIR",
     "SMTP_HOST",
     "SMTP_PORT",
     "SMTP_SECURE",
@@ -46,5 +59,17 @@
     "SMTP_PASS",
     "SMTP_FROM"
   ],
-  "globalPassThroughEnv": ["NODE_ENV", "CI", "npm_lifecycle_event"]
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "npm_lifecycle_event",
+    "NODE_EXTRA_CA_CERTS",
+    "NODE_USE_ENV_PROXY",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "NO_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "no_proxy"
+  ]
 }

@@ -1,0 +1,7 @@
+# Configuration of zizmor, the security check of the workflows (CI job
+# "Secrets and workflows").
+rules:
+  # zizmor asks for the new `$/path` syntax for local actions. actionlint
+  # does not know it yet and fails on it, so the workflows keep `./path`.
+  self-repository:
+    disable: true

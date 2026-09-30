@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "@repo/tailwind-config/theme";
-@source "../node_modules/@repo/ui/src";
+@source "../../../packages/ui/src";
 
 @layer base {
   body {

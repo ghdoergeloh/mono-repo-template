@@ -1,34 +1,50 @@
-import { implement } from "@orpc/server";
+import { implement, ORPCError } from "@orpc/server";
 
-import { auth } from "@repo/auth/auth";
+import type { Session } from "@repo/core";
+import type { Database } from "@repo/db/client";
 import { contract } from "@repo/contract";
 import { handlers } from "@repo/core";
-import { db } from "@repo/db/client";
 
-const base = implement(contract).$context<{ request: Request }>();
+export interface RouterDeps {
+  db: Database;
+  /** The session of a request, or null without a valid login. */
+  getSession: (headers: Headers) => Promise<Session | null>;
+}
 
-const authMiddleware = base.middleware(async ({ context, next }) => {
-  const session = await auth.api.getSession({
-    headers: context.request.headers,
+/**
+ * Procedures anyone may call without a login, as `router.procedure`.
+ * Every other procedure answers 401 without a session; `router.spec.ts`
+ * checks that for the whole contract.
+ */
+export const PUBLIC_PROCEDURES = ["user.me"] as const;
+
+/** Implements the contract with the core handlers. */
+export function createRouter(deps: RouterDeps) {
+  const base = implement(contract).$context<{ headers: Headers }>();
+
+  const withSession = base.middleware(async ({ context, next }) =>
+    next({ context: { session: await deps.getSession(context.headers) } }),
+  );
+  const authed = base.use(withSession).use(({ context, next }) => {
+    if (!context.session) throw new ORPCError("UNAUTHORIZED");
+    return next({ context: { session: context.session } });
   });
-  return next({ context: { session } });
-});
+  const open = base.use(withSession);
 
-const authed = base.use(authMiddleware);
-
-export const router = base.router({
-  user: {
-    me: authed.user.me.handler(({ context }) =>
-      handlers.user.me({
-        input: undefined,
-        context: { db, session: context.session },
-      }),
-    ),
-    hello: authed.user.hello.handler(({ context }) =>
-      handlers.user.hello({
-        input: undefined,
-        context: { db, session: context.session },
-      }),
-    ),
-  },
-});
+  return base.router({
+    user: {
+      me: open.user.me.handler(({ context }) =>
+        handlers.user.me({
+          input: undefined,
+          context: { db: deps.db, session: context.session },
+        }),
+      ),
+      hello: authed.user.hello.handler(({ context }) =>
+        handlers.user.hello({
+          input: undefined,
+          context: { db: deps.db, session: context.session },
+        }),
+      ),
+    },
+  });
+}

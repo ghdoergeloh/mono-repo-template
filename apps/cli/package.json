@@ -8,14 +8,14 @@
   "scripts": {
     "build": "node build.mjs",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
     "start": "node dist/index.js",
-    "test:unit": "vitest run --passWithNoTests",
-    "test:unit:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/db": "workspace:*",
     "commander": "catalog:"
   },
   "devDependencies": {

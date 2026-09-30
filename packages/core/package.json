@@ -4,18 +4,13 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "test:unit": "vitest run --passWithNoTests",
-    "test:unit:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@repo/db": "workspace:*"

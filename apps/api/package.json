@@ -7,8 +7,8 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "dotenv -e ../../.env -- tsx watch src/index.ts",
     "start": "node --enable-source-maps dist/index.js",
-    "test:unit": "vitest run --passWithNoTests",
-    "test:unit:coverage": "vitest run --coverage --passWithNoTests",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -19,7 +19,9 @@
     "@repo/contract": "workspace:*",
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
-    "hono": "catalog:"
+    "@repo/transactional": "workspace:*",
+    "hono": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",

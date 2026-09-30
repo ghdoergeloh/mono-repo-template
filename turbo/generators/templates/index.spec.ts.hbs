@@ -1,0 +1,9 @@
+import { describe, expect, it } from "vitest";
+
+import { name } from "./index";
+
+describe("{{ name }}", () => {
+  it("exports its name", () => {
+    expect(name).toBe("{{ name }}");
+  });
+});

@@ -1,51 +1,47 @@
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 
 import * as schema from "./schema/index.js";
 
-export type Db = NodePgDatabase<typeof schema> & { close(): Promise<void> };
+/**
+ * A database with the app schema, independent of the driver: node-postgres
+ * in the app, PGlite in tests (see `@repo/db/testing`). Services and
+ * handlers take this type.
+ */
+export type Database = PgDatabase<PgQueryResultHKT, typeof schema>;
 
-interface Connection {
-  pool: pg.Pool;
-  db: NodePgDatabase<typeof schema>;
+/** A connection pool and the database on top of it. */
+export interface DatabaseConnection {
+  db: Database;
+  /** Resolves when the database answers a query, e.g. for `/ready`. */
+  ping(): Promise<void>;
+  /** Closes all connections of the pool. */
+  close(): Promise<void>;
 }
 
-function createDb(): Connection {
-  if (!process.env["DATABASE_URL"]) {
-    throw new Error("DATABASE_URL is not set");
-  }
+/**
+ * Creates a connection pool for `url`. The pool connects on the first query,
+ * so creating it never fails and needs no running database.
+ */
+export function createDatabase(
+  url: string,
+  options: { maxConnections?: number } = {},
+): DatabaseConnection {
   const pool = new pg.Pool({
-    connectionString: process.env["DATABASE_URL"],
+    connectionString: url,
+    max: options.maxConnections ?? 10,
+    // Without a limit, a request or /ready waits until the operating system
+    // gives up on an unreachable database.
+    connectionTimeoutMillis: 5000,
   });
+  const db = drizzle({ client: pool, schema });
   return {
-    pool,
-    db: drizzle({
-      client: pool,
-      schema,
-    }),
+    db,
+    ping: async () => {
+      await db.execute(sql`select 1`);
+    },
+    close: () => pool.end(),
   };
 }
-
-let _connection: Connection | undefined;
-
-function getDb(): NodePgDatabase<typeof schema> {
-  _connection ??= createDb();
-  return _connection.db;
-}
-
-export const db: Db = new Proxy<Db>({} as Db, {
-  get(_target, prop: keyof Db | "close") {
-    if (prop === "close") {
-      return async () => {
-        await _connection?.pool.end();
-        _connection = undefined;
-      };
-    }
-    const db = getDb();
-    // The Proxy forwards arbitrary members of the drizzle instance. Methods are
-    // re-bound to `db` below so `this` is preserved.
-    const value = db[prop];
-    return typeof value === "function" ? value.bind(db) : value;
-  },
-});

@@ -1,0 +1,25 @@
+name: Feature request
+description: Something the app should do, or do differently.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need?
+      description: The task you want to get done, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: How do you do it today?
+  - type: textarea
+    id: done
+    attributes:
+      label: When is it done?
+      description: What must be true when this is built? One point per line.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Where in the app, if it belongs to a page.

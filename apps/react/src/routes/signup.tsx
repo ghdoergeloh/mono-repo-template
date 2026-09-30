@@ -1,6 +1,6 @@
 import type { SubmitEvent } from "react";
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@repo/ui/Button";
 import { TextField } from "@repo/ui/TextField";
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function SignupPage() {
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -26,7 +27,7 @@ function SignupPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const { error } = await authClient.signUp.email({
+    const { data, error } = await authClient.signUp.email({
       name,
       email,
       password,
@@ -39,12 +40,17 @@ function SignupPage() {
       return;
     }
 
+    // Without email verification (no SMTP_HOST), sign-up signs the user in.
+    if (data.token) {
+      await navigate({ to: "/" });
+      return;
+    }
     setEmailSent(true);
   }
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <main className="flex min-h-screen items-center justify-center">
         <div className="w-full max-w-sm space-y-4 text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="text-muted-foreground text-sm">
@@ -55,12 +61,12 @@ function SignupPage() {
             <Link to="/login">Back to sign in</Link>
           </p>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-bold">Sign Up</h1>
         {error && <p className="text-destructive text-sm">{error}</p>}
@@ -88,6 +94,6 @@ function SignupPage() {
           Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

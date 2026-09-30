@@ -4,14 +4,15 @@
 /** @jsxImportSource react */
 import { render } from "react-email";
 
+import type { Mailer } from "./transport";
 import { VerificationEmail } from "./templates/verification-email";
-import { sendEmail } from "./transport";
 
-export async function sendVerificationEmail(to: string, url: string) {
+/** Sends the link that verifies the email address of a new account. */
+export async function sendVerificationEmail(
+  mailer: Mailer,
+  to: string,
+  url: string,
+) {
   const html = await render(<VerificationEmail url={url} />);
-  await sendEmail({
-    to,
-    subject: "Verify your email address",
-    html,
-  });
+  await mailer.send({ to, subject: "Verify your email address", html });
 }

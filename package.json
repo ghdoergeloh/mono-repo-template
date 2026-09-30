@@ -18,11 +18,13 @@
     "knip": "knip",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "lint:ws": "pnpm dlx sherif@latest",
+    "lint:ws": "sherif",
     "postinstall": "pnpm lint:ws",
     "prepare": "husky",
     "preview:emails": "pnpm -F @repo/transactional preview",
-    "test": "vitest --passWithNoTests",
+    "storybook": "pnpm -F @repo/ui storybook",
+    "test": "vitest",
+    "test:e2e": "pnpm -F @repo/e2e test:e2e",
     "test:unit": "turbo run test:unit",
     "test:unit:coverage": "turbo run test:unit:coverage",
     "typecheck": "turbo run typecheck"
@@ -41,6 +43,7 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
+    "sherif": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

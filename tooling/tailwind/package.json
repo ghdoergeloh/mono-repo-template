@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "catalog:",
+    "@fontsource-variable/geist-mono": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "tailwindcss": "catalog:",
     "tailwindcss-animate": "catalog:",

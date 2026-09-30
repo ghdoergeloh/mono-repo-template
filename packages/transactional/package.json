@@ -4,17 +4,14 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
     "preview": "email dev --dir src/templates --port 3001",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "nodemailer": "catalog:",
@@ -24,9 +21,11 @@
   "devDependencies": {
     "@react-email/ui": "catalog:",
     "@repo/tsconfig": "workspace:*",
+    "@repo/vitest": "workspace:*",
     "@types/node": "catalog:",
     "@types/nodemailer": "catalog:",
     "@types/react": "catalog:react19",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

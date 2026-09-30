@@ -1,8 +1,11 @@
+import { cpSync } from "node:fs";
 import { build } from "esbuild";
 
 /**
  * Bundles the CLI with all dependencies into dist/index.js. Workspace
  * packages export TypeScript sources, which plain Node.js cannot load.
+ * The SQL migrations go next to the bundle, where `migrationsFolder()`
+ * finds them.
  */
 await build({
   entryPoints: ["src/index.ts"],
@@ -20,3 +23,5 @@ await build({
   },
   logLevel: "info",
 });
+
+cpSync("../../packages/db/drizzle", "dist/drizzle", { recursive: true });

@@ -17,20 +17,22 @@ const RootLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2 p-2">
-        <div className="flex gap-2">
+      <header className="border-border flex flex-wrap items-center justify-between gap-2 border-b p-2">
+        <nav aria-label="Main" className="flex gap-2">
           <Link to="/" className="[&.active]:font-bold">
             Home
           </Link>{" "}
           <Link to="/about" className="[&.active]:font-bold">
             About
           </Link>
-        </div>
-        <div className="flex items-center gap-2">
+        </nav>
+        <div className="flex flex-wrap items-center gap-2">
           <ThemeToggle />
           {isPending ? null : session?.user ? (
             <>
-              <span className="text-sm">{session.user.email}</span>
+              <span className="hidden text-sm sm:inline">
+                {session.user.email}
+              </span>
               <Button
                 variant="secondary"
                 onPress={async () => {
@@ -45,10 +47,10 @@ const RootLayout = () => {
             <Link to="/login">Sign In</Link>
           )}
         </div>
-      </div>
-      <hr className="border-border" />
+      </header>
       <Outlet />
-      <TanStackRouterDevtools />
+      {/* Not in automated browsers: the devtools are no part of the app. */}
+      {!navigator.webdriver && <TanStackRouterDevtools />}
     </>
   );
 };

@@ -3,6 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "clean": "git clean -xdf .cache .turbo node_modules"
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@repo/vitest": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

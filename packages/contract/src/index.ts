@@ -1,6 +1,12 @@
 import { oc } from "@orpc/contract";
 import { z } from "zod";
 
+export { listProcedures } from "./procedures";
+export type { NamedProcedure } from "./procedures";
+
+/** Path under which the API serves the contract (oRPC protocol). */
+export const RPC_PATH = "/api/rpc";
+
 const userSchema = z.object({
   id: z.string(),
   email: z.string(),

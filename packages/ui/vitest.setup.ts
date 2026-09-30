@@ -1,2 +1,2 @@
-// Vitest setup for React components.
-// Add side-effect imports here (e.g. @testing-library/jest-dom matchers) as tests are added.
+// Matchers of Testing Library (`toBeInTheDocument`, …) for the jsdom tests.
+import "@testing-library/jest-dom/vitest";

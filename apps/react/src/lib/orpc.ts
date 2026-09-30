@@ -5,12 +5,12 @@ import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryClient } from "@tanstack/react-query";
 
 import type { Contract } from "@repo/contract";
+import { RPC_PATH } from "@repo/contract";
 
+// The API serves the SPA on the same origin; in development the Vite dev
+// server forwards /api to it. The session cookie goes along by default.
 const link = new RPCLink({
-  url: `${import.meta.env["VITE_API_URL"] as string}/api`,
-  // Send the better-auth session cookie to the API on another origin.
-  fetch: (request, init) =>
-    globalThis.fetch(request, { ...init, credentials: "include" }),
+  url: new URL(RPC_PATH, globalThis.location.origin).toString(),
 });
 
 /** Typed oRPC client for the API contract. */

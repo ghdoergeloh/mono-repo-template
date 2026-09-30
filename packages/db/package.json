@@ -4,30 +4,21 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "default": "./src/client.ts"
-    },
-    "./schema": {
-      "types": "./dist/schema/index.d.ts",
-      "default": "./src/schema/index.ts"
-    }
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./schema": "./src/schema/index.ts",
+    "./migrate": "./src/migrate.ts",
+    "./testing": "./src/testing.ts"
   },
   "scripts": {
-    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
     "generate": "pnpm with-env drizzle-kit generate",
     "migrate": "pnpm with-env drizzle-kit migrate",
     "push": "pnpm with-env drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
-    "test:unit": "vitest run --passWithNoTests",
-    "test:unit:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
@@ -35,6 +26,7 @@
     "pg": "catalog:"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "catalog:",
     "@repo/tsconfig": "workspace:*",
     "@repo/vitest": "workspace:*",
     "@types/node": "catalog:",

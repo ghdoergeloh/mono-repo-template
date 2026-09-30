@@ -1,4 +1,4 @@
-import type { Db } from "@repo/db/client";
+import type { Database } from "@repo/db/client";
 
 /** The authenticated user as seen by the handlers. */
 export interface Session {
@@ -11,7 +11,7 @@ export interface Session {
 
 /** Everything a handler may depend on, provided by the transport (API, CLI). */
 export interface HandlerContext {
-  db: Db;
+  db: Database;
   session: Session | null;
 }
 

@@ -1,0 +1,22 @@
+# Keep the build context small and free of local state and secrets.
+**/node_modules
+**/dist
+**/coverage
+**/.turbo
+**/.cache
+**/.tanstack
+**/*.tsbuildinfo
+**/playwright-report
+**/test-results
+**/storybook-static
+.git
+.github
+.husky
+.claude
+.devcontainer
+.vscode
+.env*
+!.env.example
+docs
+Dockerfile
+.dockerignore

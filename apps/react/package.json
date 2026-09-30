@@ -8,9 +8,9 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "vite",
     "preview": "vite preview",
-    "test:unit": "vitest run --passWithNoTests",
-    "test:unit:coverage": "vitest run --coverage --passWithNoTests",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "@orpc/client": "catalog:",

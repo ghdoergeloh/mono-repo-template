@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import type { Db } from "@repo/db/client";
+import type { Database } from "@repo/db/client";
 
 import type { HandlerContext } from "./types";
 import { hello, me } from "./user";
 
-const db = {} as Db;
+const db = {} as Database;
 const session = {
   user: { id: "u1", email: "ada@example.com", name: "Ada" },
 };

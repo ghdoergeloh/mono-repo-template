@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // The checks read the configs of every package and docs/; a cache hit
+    // would hide a change there. CI runs test:unit:coverage.
+    "test:unit": {
+      "cache": false
+    },
+    "test:unit:coverage": {
+      "cache": false
+    }
+  }
+}

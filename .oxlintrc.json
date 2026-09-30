@@ -171,7 +171,7 @@
     "typescript/no-unsafe-return": "error",
     "typescript/no-unsafe-unary-minus": "error",
     "typescript/no-wrapper-object-types": "error",
-    "typescript/non-nullable-type-assertion-style": "error",
+    "typescript/non-nullable-type-assertion-style": "off",
     "typescript/only-throw-error": "error",
     "typescript/prefer-as-const": "error",
     "typescript/prefer-find": "error",

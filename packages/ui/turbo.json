@@ -1,0 +1,22 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // raw-colors.spec.ts reads apps/react/src, the contrast test and the
+    // screenshots depend on the theme.
+    "test:unit": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/react/src/**",
+        "$TURBO_ROOT$/tooling/tailwind/**"
+      ]
+    },
+    "test:unit:coverage": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/react/src/**",
+        "$TURBO_ROOT$/tooling/tailwind/**"
+      ]
+    }
+  }
+}
