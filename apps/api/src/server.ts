@@ -12,6 +12,9 @@ import type { Env } from "./env";
 import { createApp } from "./app";
 import { createRouter } from "./router";
 
+/** How long running requests may take after SIGTERM. */
+const STOP_TIMEOUT_MS = 10_000;
+
 /**
  * Wires the app from the validated environment and starts the HTTP server
  * on all interfaces. Stops cleanly on SIGTERM and SIGINT.
@@ -80,14 +83,26 @@ export function startServer(env: Env): void {
     if (stopping) return;
     stopping = true;
     console.log(`${signal}: stopping`);
-    server.close();
-    database.close().then(
-      () => process.exit(0),
-      (error: unknown) => {
-        console.error(error);
-        process.exit(1);
-      },
-    );
+    const closeDatabase = () =>
+      database.close().then(
+        () => process.exit(0),
+        (error: unknown) => {
+          console.error(error);
+          process.exit(1);
+        },
+      );
+    // Requests that are running finish first; they still need the pool.
+    // A request that hangs must not keep the process alive.
+    const fallback = setTimeout(() => {
+      console.warn(
+        `Requests still running after ${STOP_TIMEOUT_MS / 1000} s; stopping anyway`,
+      );
+      void closeDatabase();
+    }, STOP_TIMEOUT_MS);
+    server.close(() => {
+      clearTimeout(fallback);
+      void closeDatabase();
+    });
   };
   process.on("SIGTERM", () => stop("SIGTERM"));
   process.on("SIGINT", () => stop("SIGINT"));

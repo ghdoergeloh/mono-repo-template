@@ -1,3 +1,4 @@
+import { citext } from "@electric-sql/pglite/contrib/citext";
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { TestDatabase } from "./testing";
@@ -34,6 +35,16 @@ describe("createTestDatabase", () => {
     const second = await database();
     await first.db.insert(user).values(ada);
     expect(await second.db.select().from(user)).toEqual([]);
+  });
+
+  it("loads PGlite extensions, e.g. for pgvector", async () => {
+    const created = await createTestDatabase({ extensions: { citext } });
+    open.push(created);
+    await created.pg.exec("create extension citext");
+    const { rows } = await created.pg.query<{ same: boolean }>(
+      "select 'Ada'::citext = 'ada'::citext as same",
+    );
+    expect(rows[0]?.same).toBe(true);
   });
 
   it("enforces the constraints of the schema", async () => {

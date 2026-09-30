@@ -1,3 +1,4 @@
+import type { Extensions } from "@electric-sql/pglite";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import { migrate as migratePg } from "drizzle-orm/node-postgres/migrator";
@@ -25,11 +26,23 @@ function wrap(client: PGlite): TestDatabase {
   };
 }
 
-/** The migrated database of this test file, the source of every clone. */
-let migrated: Promise<PGlite> | undefined;
+export interface TestDatabaseOptions {
+  /**
+   * PGlite extensions the migrations need, e.g. `{ vector }` from
+   * `@electric-sql/pglite-pgvector`. Pass the same object on every call, so
+   * the migrated database is reused.
+   */
+  extensions?: Extensions;
+}
 
-async function migrateNew(): Promise<PGlite> {
-  const client = new PGlite();
+/**
+ * The migrated databases of this test file, the sources of every clone,
+ * one per set of extensions.
+ */
+const migrated = new Map<Extensions | undefined, Promise<PGlite>>();
+
+async function migrateNew(extensions?: Extensions): Promise<PGlite> {
+  const client = new PGlite(extensions ? { extensions } : {});
   await migrate(drizzle({ client, schema }), {
     migrationsFolder: migrationsFolder(),
   });
@@ -43,10 +56,16 @@ async function migrateNew(): Promise<PGlite> {
  * PGlite has one connection. For locks, parallel transactions and other
  * real concurrency, use {@link createPostgresTestDatabase}.
  */
-export async function createTestDatabase(): Promise<TestDatabase> {
-  migrated ??= migrateNew();
+export async function createTestDatabase(
+  options: TestDatabaseOptions = {},
+): Promise<TestDatabase> {
+  let source = migrated.get(options.extensions);
+  if (!source) {
+    source = migrateNew(options.extensions);
+    migrated.set(options.extensions, source);
+  }
   // clone() is typed as the interface; the copy is a PGlite like its source.
-  return wrap((await (await migrated).clone()) as PGlite);
+  return wrap((await (await source).clone()) as PGlite);
 }
 
 /** A database on a real PostgreSQL server, dropped again on close. */

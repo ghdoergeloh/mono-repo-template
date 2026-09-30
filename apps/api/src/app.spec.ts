@@ -78,6 +78,20 @@ describe("API routes", () => {
     });
     expect(response.status).toBe(413);
   });
+
+  it("accepts larger bodies with a higher limit, e.g. for uploads", async () => {
+    const body = "x".repeat(MAX_BODY_BYTES + 1);
+    const request = () =>
+      new Request("http://localhost/api/rpc/user/me", {
+        method: "POST",
+        headers: { "content-length": String(body.length) },
+        body,
+      });
+    const larger = app({ maxBodyBytes: 2 * MAX_BODY_BYTES });
+    expect((await larger.request(request())).status).toBe(200);
+    const smaller = app({ maxBodyBytes: 1024 });
+    expect((await smaller.request(request())).status).toBe(413);
+  });
 });
 
 describe("SPA", () => {

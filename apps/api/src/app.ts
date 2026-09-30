@@ -7,10 +7,12 @@ import { cors } from "hono/cors";
 
 import { RPC_PATH } from "@repo/contract";
 
-/** Largest request body the API accepts. */
+/** Largest request body the API accepts unless `maxBodyBytes` is set. */
 export const MAX_BODY_BYTES = 1024 * 1024;
 
 export interface AppDeps {
+  /** Largest request body under `/api`, e.g. more for file uploads. */
+  maxBodyBytes?: number;
   /** Origins that may call `/api` with credentials from another origin. */
   trustedOrigins: string[];
   /** Directory of the built SPA; null when Vite serves it. */
@@ -41,7 +43,7 @@ export function createApp(deps: AppDeps): Hono {
     "/api/*",
     cors({ origin: deps.trustedOrigins, credentials: true }),
     bodyLimit({
-      maxSize: MAX_BODY_BYTES,
+      maxSize: deps.maxBodyBytes ?? MAX_BODY_BYTES,
       onError: (c) => c.json({ message: "Request body too large" }, 413),
     }),
   );

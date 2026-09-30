@@ -10,9 +10,20 @@ updates:
       default-days: 7
     open-pull-requests-limit: 10
     groups:
+      # A new Playwright brings a new Chromium, which renders a little
+      # differently: the screenshot tests fail until the references are
+      # made again on Linux arm64 (see README, Testing). Kept apart so the
+      # other updates can merge.
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/test"
       dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "playwright"
+          - "@playwright/test"
         update-types:
           - "minor"
           - "patch"

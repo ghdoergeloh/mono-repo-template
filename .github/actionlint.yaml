@@ -1,0 +1,7 @@
+# Configuration of actionlint (CI job "Secrets and workflows").
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      # GitHub supports `concurrency.queue` (a queue of waiting runs, e.g.
+      # for deployments); actionlint does not know the key yet.
+      - 'unexpected key "queue" for "concurrency" section'
