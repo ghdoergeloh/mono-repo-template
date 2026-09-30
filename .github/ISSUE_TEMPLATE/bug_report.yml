@@ -1,0 +1,46 @@
+name: Bug report
+description: Something does not work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One problem per issue, so it can be fixed and closed on its own.
+        Do not add personal data of real people or secrets.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The path in the app, for example /settings.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: One step per line.
+      placeholder: |
+        1. Open /settings
+        2. Click "Save"
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drop images here. Make sure they show no personal data.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, operating system, screen width, light or dark mode.

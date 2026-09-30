@@ -5,6 +5,9 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    # New releases wait a week: most hijacked packages are found by then.
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 10
     groups:
       dependencies:
@@ -26,11 +29,17 @@ updates:
     labels:
       - "dependencies"
 
+  # Actions are pinned by commit SHA; Dependabot updates the SHA and the
+  # version comment.
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/"
+      - "/tooling/github/setup"
     schedule:
       interval: "weekly"
       day: "monday"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     groups:
       github-actions:
@@ -39,3 +48,20 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+
+  # The node base image in the Dockerfile is pinned by digest.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    ignore:
+      # Keep the Node.js major of the image on the one in .nvmrc.
+      - dependency-name: "node"
+        update-types:
+          - "version-update:semver-major"
+    labels:
+      - "dependencies"
