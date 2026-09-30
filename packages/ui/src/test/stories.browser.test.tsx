@@ -6,8 +6,6 @@ import axe from "axe-core";
 import { afterEach, describe, expect, inject, it } from "vitest";
 import { page } from "vitest/browser";
 
-import preview from "../../.storybook/preview";
-
 type StoryModule = Record<string, unknown> & { default: Meta };
 
 const modules = import.meta.glob<StoryModule>("../**/*.stories.tsx", {
@@ -100,15 +98,28 @@ describe.each(Object.entries(modules))("%s", (_path, module) => {
       themes.map((theme) => [name, theme, story] as const),
     ),
   )(`${title} %s (%s)`, async (name, theme, story) => {
+    // stories.setup.ts applies the preview (decorators, parameters) once;
+    // passing it here again would wrap every story twice.
     const Story = composeStory(
       story,
       module.default,
-      { ...preview, initialGlobals: { theme } },
+      { initialGlobals: { theme } },
       name,
     );
     const { container } = render(<Story />);
     await Story.play?.({ canvasElement: container });
     await settle();
+
+    // A story larger than the viewport is cut off in the screenshot.
+    const html = document.documentElement;
+    expect(
+      html.scrollHeight,
+      "story taller than the viewport",
+    ).toBeLessThanOrEqual(window.innerHeight);
+    expect(
+      html.scrollWidth,
+      "story wider than the viewport",
+    ).toBeLessThanOrEqual(window.innerWidth);
 
     const results = await axe.run(document.body, {
       resultTypes: ["violations"],
