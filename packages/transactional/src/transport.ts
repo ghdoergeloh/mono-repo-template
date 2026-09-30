@@ -24,15 +24,22 @@ export interface Mailer {
   send(email: Email): Promise<void>;
 }
 
-/** Creates a mailer for an SMTP server, or for the given transporter. */
-export function createMailer(
-  config: SmtpConfig,
-  transporter: Transporter = nodemailer.createTransport({
+/** The nodemailer SMTP options of a config; login only with a user. */
+export function smtpTransportOptions(config: SmtpConfig) {
+  return {
     host: config.host,
     port: config.port,
     secure: config.secure,
     ...(config.user && { auth: { user: config.user, pass: config.pass } }),
-  }),
+  };
+}
+
+/** Creates a mailer for an SMTP server, or for the given transporter. */
+export function createMailer(
+  config: SmtpConfig,
+  transporter: Transporter = nodemailer.createTransport(
+    smtpTransportOptions(config),
+  ),
 ): Mailer {
   return {
     send: async (email) => {

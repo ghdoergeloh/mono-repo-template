@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import type { Email } from "./transport";
 import { sendVerificationEmail } from "./emails";
-import { createMailer } from "./transport";
+import { createMailer, smtpTransportOptions } from "./transport";
 
 const config = {
   host: "localhost",
@@ -34,9 +34,20 @@ describe("sendVerificationEmail", () => {
 describe("createMailer", () => {
   it("creates an SMTP transport without connecting", () => {
     expect(createMailer(config)).toHaveProperty("send");
-    expect(createMailer({ ...config, user: "u", pass: "p" })).toHaveProperty(
-      "send",
-    );
+  });
+
+  it("logs in only when a user is set", () => {
+    expect(smtpTransportOptions(config)).toEqual({
+      host: "localhost",
+      port: 1025,
+      secure: false,
+    });
+    expect(smtpTransportOptions({ ...config, user: "u", pass: "p" })).toEqual({
+      host: "localhost",
+      port: 1025,
+      secure: false,
+      auth: { user: "u", pass: "p" },
+    });
   });
 
   it("sends from the configured address", async () => {
