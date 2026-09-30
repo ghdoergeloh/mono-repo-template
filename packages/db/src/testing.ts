@@ -72,12 +72,19 @@ export async function createPostgresTestDatabase(
   const url = new URL(adminUrl);
   url.pathname = `/${name}`;
   const pool = new pg.Pool({ connectionString: url.toString(), max: 10 });
+  let closing = false;
+  // The forced drop below can end a connection that the pool is still
+  // closing; the pool reports that as an error. Any other error stays one.
+  pool.on("error", (error) => {
+    if (!closing) throw error;
+  });
   const db = drizzlePg({ client: pool, schema });
   await migratePg(db, { migrationsFolder: migrationsFolder() });
   return {
     db,
     pool,
     close: async () => {
+      closing = true;
       await pool.end();
       await admin.query(`drop database if exists ${name} with (force)`);
       await admin.end();
