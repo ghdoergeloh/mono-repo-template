@@ -17,15 +17,15 @@ const RootLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2 p-2">
-        <div className="flex gap-2">
+      <header className="border-border flex items-center justify-between gap-2 border-b p-2">
+        <nav aria-label="Main" className="flex gap-2">
           <Link to="/" className="[&.active]:font-bold">
             Home
           </Link>{" "}
           <Link to="/about" className="[&.active]:font-bold">
             About
           </Link>
-        </div>
+        </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           {isPending ? null : session?.user ? (
@@ -45,8 +45,7 @@ const RootLayout = () => {
             <Link to="/login">Sign In</Link>
           )}
         </div>
-      </div>
-      <hr className="border-border" />
+      </header>
       <Outlet />
       <TanStackRouterDevtools />
     </>

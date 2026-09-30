@@ -50,7 +50,7 @@ function SignupPage() {
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <main className="flex min-h-screen items-center justify-center">
         <div className="w-full max-w-sm space-y-4 text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="text-muted-foreground text-sm">
@@ -61,12 +61,12 @@ function SignupPage() {
             <Link to="/login">Back to sign in</Link>
           </p>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-bold">Sign Up</h1>
         {error && <p className="text-destructive text-sm">{error}</p>}
@@ -94,6 +94,6 @@ function SignupPage() {
           Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

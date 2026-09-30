@@ -8,6 +8,13 @@ node_modules
 
 # testing
 coverage
+# Vitest browser mode: failed screenshots and their diffs
+.vitest
+# Playwright
+playwright-report
+test-results
+# Storybook build
+storybook-static
 
 # next.js
 .next/

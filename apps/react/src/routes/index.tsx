@@ -19,11 +19,11 @@ function Index() {
   const hello = useQuery(orpc.user.hello.queryOptions());
 
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-      <p className="text-muted-foreground">
+    <main className="space-y-2 p-4">
+      <h1 className="text-2xl font-bold">Welcome home</h1>
+      <p>
         {hello.data?.message ?? (hello.isError ? "API not reachable" : "…")}
       </p>
-    </div>
+    </main>
   );
 }

@@ -1,3 +1,8 @@
+/* The fonts ship with the app, so text looks the same on every machine and
+   screenshot tests can compare pixels. */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
 @plugin "tailwindcss-react-aria-components";
 
 @plugin "tailwindcss-animate";
@@ -18,14 +23,14 @@
   --secondary: oklch(0.967 0.0106 316.4921);
   --secondary-foreground: oklch(0.4536 0.0226 309.5036);
   --muted: oklch(0.967 0.0106 316.4921);
-  --muted-foreground: oklch(0.5653 0.021 306.4429);
+  --muted-foreground: oklch(0.54 0.021 306.4429);
   --accent: oklch(0.967 0.0106 316.4921);
   --accent-foreground: oklch(0.5605 0.1911 350.0331);
-  --destructive: oklch(0.6368 0.2078 25.3313);
+  --destructive: oklch(0.575 0.2078 25.3313);
   --destructive-foreground: oklch(1 0 0);
   --warning: oklch(0.7686 0.1647 70.0804);
   --warning-foreground: oklch(0.3 0.07 70);
-  --success: oklch(0.6907 0.1554 162.4796);
+  --success: oklch(0.53 0.1554 162.4796);
   --success-foreground: oklch(1 0 0);
   --border: oklch(0.9419 0.016 310.0997);
   --input: oklch(1 0 0);
@@ -72,15 +77,15 @@
     --secondary: oklch(0.2551 0.0142 310.7968);
     --secondary-foreground: oklch(0.721 0.0184 308.1777);
     --muted: oklch(0.2551 0.0142 310.7968);
-    --muted-foreground: oklch(0.6288 0.0177 309.9946);
+    --muted-foreground: oklch(0.64 0.0177 309.9946);
     --accent: oklch(0.2551 0.0142 310.7968);
     --accent-foreground: oklch(0.6747 0.1492 345.9482);
-    --destructive: oklch(0.59 0.2 25.5);
-    --destructive-foreground: oklch(1 0 0);
+    --destructive: oklch(0.62 0.2 25.5);
+    --destructive-foreground: oklch(0.1836 0.0111 311.9111);
     --warning: oklch(0.5 0.13 70);
     --warning-foreground: oklch(0.95 0.04 70);
-    --success: oklch(0.55 0.14 162);
-    --success-foreground: oklch(1 0 0);
+    --success: oklch(0.58 0.14 162);
+    --success-foreground: oklch(0.1836 0.0111 311.9111);
     --border: oklch(0.2941 0.0175 310.1142);
     --input: oklch(0.2551 0.0142 310.7968);
     --ring: oklch(0.6747 0.1492 345.9482);
@@ -152,8 +157,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -60,6 +60,7 @@ module.exports = {
         "(^|/)out/",
         "(^|/)dist/",
         "(^|/)coverage/",
+        "(^|/)storybook-static/",
         "routeTree\\.gen\\.ts$",
       ],
     },

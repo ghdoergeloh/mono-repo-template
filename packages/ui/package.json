@@ -8,7 +8,9 @@
     "./*": "./src/ui/*.tsx"
   },
   "scripts": {
+    "build-storybook": "storybook build -o storybook-static",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "storybook": "storybook dev -p 6006 --no-open",
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
@@ -23,13 +25,31 @@
     "tailwind-variants": "catalog:"
   },
   "devDependencies": {
+    "@repo/tailwind-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@repo/vitest": "workspace:*",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/culori": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "axe-core": "catalog:",
+    "culori": "catalog:",
     "jsdom": "catalog:",
+    "playwright": "catalog:",
     "react": "catalog:react19",
+    "storybook": "catalog:",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {

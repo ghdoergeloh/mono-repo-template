@@ -6,5 +6,7 @@
     "types": ["vite/client"],
     "tsBuildInfoFile": ".cache/tsbuildinfo.app.json"
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Tests run in Node.js (jsdom) and may use its APIs: tsconfig.test.json.
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/test"]
 }
