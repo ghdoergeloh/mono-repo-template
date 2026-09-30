@@ -70,10 +70,13 @@ describe("cli", () => {
   });
 });
 
+/** The error every command in `databaseCommands` is made to fail with. */
+const failure = new Error("database failed");
+
 /**
  * Every command that opens the database closes it again when it fails;
  * an open pool keeps the process from ending. A new command of that kind
- * goes into this list.
+ * goes into this list; `fail` makes one of its steps throw `failure`.
  */
 const databaseCommands: {
   args: string[];
@@ -81,10 +84,7 @@ const databaseCommands: {
 }[] = [
   {
     args: ["migrate"],
-    fail: (deps) => ({
-      ...deps,
-      migrate: () => Promise.reject(new Error("migration failed")),
-    }),
+    fail: (deps) => ({ ...deps, migrate: () => Promise.reject(failure) }),
   },
 ];
 
@@ -93,7 +93,7 @@ describe.each(databaseCommands)("cli $args.0", ({ args, fail }) => {
     const { connection, state } = fakeConnection();
     await expect(
       run(args, fail({ connect: () => connection })).done,
-    ).rejects.toThrow("migration failed");
+    ).rejects.toBe(failure);
     expect(state.closed).toBe(true);
   });
 });
