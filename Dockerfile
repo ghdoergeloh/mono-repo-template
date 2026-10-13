@@ -19,7 +19,7 @@
 #   docker build --secret id=ca,src=/path/to/ca.pem -t app .
 
 # Node.js 24 on Debian bookworm, pinned by digest. Dependabot updates it.
-FROM node:24-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS node-base
+FROM node:24-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS node-base
 
 FROM node-base AS base
 ENV PNPM_HOME=/pnpm \
