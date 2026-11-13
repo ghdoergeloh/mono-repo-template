@@ -28,7 +28,7 @@ catalog:
   "@orpc/server": ^1.16.1
   "@orpc/tanstack-query": ^1.16.1
   # Exact: Playwright and the Vitest browser tests share one Chromium build.
-  "@playwright/test": 1.63.0
+  "@playwright/test": 1.65.0
   # Exact versions: `email dev` requires @react-email/ui to match react-email.
   "@react-email/ui": 6.11.6
   "@storybook/addon-a11y": ^10.6.5
@@ -75,7 +75,7 @@ catalog:
   oxlint-tsgolint: ^7.0.2005
   pg: ^8.23.1
   # Exact: Playwright and the Vitest browser tests share one Chromium build.
-  playwright: 1.63.0
+  playwright: 1.65.0
   react-aria: ^3.53.1
   react-aria-components: ^1.22.1
   react-email: 6.11.6
