@@ -22,6 +22,31 @@ const sources = globSync(
     statSync(path.join(root, file)).isFile(),
 );
 
+/** True when the source imports any entry of tailwind-variants. */
+function importsTailwindVariants(source: string): boolean {
+  return /(from\s+|import\s*\(\s*)["']tailwind-variants(\/[^"']*)?["']/.test(
+    source,
+  );
+}
+
+describe("importsTailwindVariants", () => {
+  it.each([
+    'import { tv } from "tailwind-variants";',
+    "import { twMerge } from 'tailwind-variants/merge';",
+    'const { tv } = await import("tailwind-variants");',
+    "const lite = await import( 'tailwind-variants/lite' );",
+  ])("finds %s", (source) => {
+    expect(importsTailwindVariants(source)).toBe(true);
+  });
+
+  it.each([
+    'import { tv } from "./lib/tw";',
+    'const tw = await import("@repo/ui/lib/tw");',
+  ])("ignores %s", (source) => {
+    expect(importsTailwindVariants(source)).toBe(false);
+  });
+});
+
 describe("imports of tailwind-variants", () => {
   it("finds the sources", () => {
     expect(sources.length).toBeGreaterThan(0);
@@ -29,9 +54,7 @@ describe("imports of tailwind-variants", () => {
 
   it("come only from packages/ui/src/lib/tw.ts", () => {
     const offenders = sources.filter((file) =>
-      /from\s+["']tailwind-variants(\/[^"']*)?["']/.test(
-        readFileSync(path.join(root, file), "utf8"),
-      ),
+      importsTailwindVariants(readFileSync(path.join(root, file), "utf8")),
     );
     expect(offenders).toEqual([]);
   });
