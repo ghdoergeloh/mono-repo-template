@@ -48,6 +48,21 @@ module.exports = {
       from: { path: "^packages/ui/" },
       to: { path: "^packages/(auth|core|db|transactional)/" },
     },
+    {
+      name: "tailwind-variants-only-in-tw",
+      severity: "error",
+      comment:
+        "Import tv and twMerge from packages/ui/src/lib/tw.ts. It has the merge " +
+        "rules for Tailwind 4; every other entry of tailwind-variants drops a " +
+        "leading-* next to a later font size.",
+      from: {
+        path: "^(packages/ui|apps/react)/src/",
+        pathNot: "^packages/ui/src/lib/tw\\.ts$",
+      },
+      to: {
+        path: "(^|/)node_modules/tailwind-variants/|^tailwind-variants(/|$)",
+      },
+    },
   ],
   options: {
     doNotFollow: {
