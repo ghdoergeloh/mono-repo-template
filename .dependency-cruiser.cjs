@@ -69,11 +69,12 @@ module.exports = {
       path: "node_modules",
     },
     exclude: {
+      // Paths of the workspace only: dependencies in node_modules (which
+      // often live in a dist/ folder) must stay visible to the rules.
       path: [
-        "node_modules",
         "\\.(test|spec)\\.[jt]sx?$",
         "(^|/)out/",
-        "(^|/)dist/",
+        "^(apps|packages|tooling)/[^/]+/dist/",
         "(^|/)coverage/",
         "(^|/)storybook-static/",
         "routeTree\\.gen\\.ts$",

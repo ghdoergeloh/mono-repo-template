@@ -1,5 +1,11 @@
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -14,7 +20,10 @@ import { root } from "./scripts";
  * packages/ui and need no tailwind-variants at all.
  *
  * The rule "tailwind-variants-only-in-tw" in .dependency-cruiser.cjs keeps
- * it that way. This test runs it on a small copy of the folder layout.
+ * it that way. This test runs it on a small copy of the folder layout,
+ * with the installed packages of packages/ui linked in, so that every import
+ * resolves the same way as in the repository. dependency-cruiser skips test
+ * files; in packages/ui/src the oxlint rule covers them.
  */
 
 const files: Record<string, string> = {
@@ -40,14 +49,26 @@ beforeAll(() => {
     mkdirSync(path.dirname(path.join(dir, file)), { recursive: true });
     writeFileSync(path.join(dir, file), source);
   }
+  for (const folder of ["packages/ui", "apps/react"]) {
+    symlinkSync(
+      path.join(root, "packages/ui/node_modules"),
+      path.join(dir, folder, "node_modules"),
+    );
+  }
 });
 
 afterAll(() => {
   rmSync(dir, { recursive: true, force: true });
 });
 
-/** The files that break the rule, as dependency-cruiser reports them. */
-function offenders(): string[] {
+interface Violation {
+  from: string;
+  to: string;
+  rule: { name: string };
+}
+
+/** The violations of the rule, as dependency-cruiser reports them. */
+function violations(): Violation[] {
   const result = spawnSync(
     path.join(root, "node_modules/.bin/depcruise"),
     [
@@ -61,19 +82,21 @@ function offenders(): string[] {
     { cwd: dir, encoding: "utf8" },
   );
   const report = JSON.parse(result.stdout) as {
-    summary: { violations: { from: string; rule: { name: string } }[] };
+    summary: { violations: Violation[] };
   };
-  return report.summary.violations
-    .filter(
-      (violation) => violation.rule.name === "tailwind-variants-only-in-tw",
-    )
-    .map((violation) => violation.from)
-    .sort();
+  return report.summary.violations.filter(
+    (violation) => violation.rule.name === "tailwind-variants-only-in-tw",
+  );
 }
 
 describe("imports of tailwind-variants", () => {
   it("are allowed only in packages/ui/src/lib/tw.ts", () => {
-    expect(offenders()).toEqual([
+    const found = violations();
+    // Every import resolves to the installed package, not to a bare name.
+    expect(
+      found.filter((violation) => !violation.to.includes("node_modules/")),
+    ).toEqual([]);
+    expect(found.map((violation) => violation.from).sort()).toEqual([
       "apps/react/src/screen.ts",
       "packages/ui/src/dynamic.ts",
       "packages/ui/src/entry.ts",
